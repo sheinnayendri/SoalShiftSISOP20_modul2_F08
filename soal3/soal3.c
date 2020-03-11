@@ -122,4 +122,5 @@ int main()
     	char *argv[] = {"rm", "coba1.txt", "coba2.txt", NULL};
     	execv("/bin/rm", argv);
     }
+    return 0;
 }
