@@ -12,7 +12,7 @@
 #include<sys/prctl.h>
 #include<stdbool.h>
 
-void daemon()
+void daemonstart()
 {
 	pid_t pid, sid;
     pid = fork();
@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
     }
     while(wait(&stat) > 0);
 
-    daemon();
+    daemonstart();
 
     char curtime[30], curtime2[30], curtime3[30], link[50];
     int stat1, stat2, stat3;
@@ -58,11 +58,10 @@ int main(int argc, char* argv[])
     while(1)
     {
     	int i;
-        pid_t cid, cid2, cid3, cid4;
+        pid_t cid, cid2, cid3, cid4, cid5;
         time_t t1 = time(NULL);
         struct tm* p1 = localtime(&t1);
         strftime(curtime, 30, "%Y-%m-%d_%H:%M:%S", p1);
-        //printf("%s\n", curtime);
 
         cid = fork();
         if(cid < 0) exit(0);
@@ -97,7 +96,7 @@ int main(int argc, char* argv[])
             }
 
             while(wait(&stat2) > 0);
-//            chdir("..");
+            chdir("..");
             strcpy(curtime3, curtime);
             strcat(curtime3, ".zip");
 
@@ -108,10 +107,15 @@ int main(int argc, char* argv[])
                 char *ag[] = {"zip", "-r", curtime3, curtime, NULL};
                 execv("/usr/bin/zip", ag);
             }
+		
             while(wait(&stat3) > 0);
-            
-            char *ag[] = {"rm", "-r", curtime, NULL};
-            execv("/bin/rm", ag);
+            cid5 = fork();
+	    if(cid5 < 0) exit(0);
+            if(cid5 == 0)
+            {
+                char *ag[] = {"rm", "-r", curtime, NULL};
+            	execv("/bin/rm", ag);
+            }
         }
         sleep(30);
     }
