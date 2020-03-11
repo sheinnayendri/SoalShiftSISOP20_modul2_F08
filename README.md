@@ -73,19 +73,24 @@ Soal ini meminta kami untuk membantu Jaya dalam membuat tugas yang berbeda tapi 
 ### Jawab 3a
 Dikarenakan tidak boleh memakai fungsi mkdir dari C, maka kami harus menggunakan fungsi ```fork``` dan ```exec``` agar dapat menjalankan beberapa perintah secara bersamaan, dan memanggil fungsi ```mkdir``` melalui exec. Di sini kami menggunakan fungsi ```sleep(5)``` agar dapat memberi delay 5 detik sebelum membuat folder **sedaap**, seperti berikut:
 ```c
-pid_t cid4;
-cid4 = fork();
-if(cid4 < 0) exit(0);
-if(cid4 == 0)
+pid_t cid1, cid2, cid3, cid4, cid5, cid6, cid7, cid8;
+int status;
+cid1 = fork();
+if(cid1 < 0) exit(0);
+if(cid1 == 0) 
 {
-  char *argv[] = {"mkdir", "/home/sheinna/modul2/indomie", NULL};
-  execv("/bin/mkdir", argv);
+    char *argv[] = {"mkdir", "/home/sheinna/modul2/indomie", NULL};
+    execv("/bin/mkdir", argv);
 }
-else
+
+while((wait(&status)) > 0);
+cid2 = fork();
+if(cid2 < 0) exit(0);
+if(cid2 == 0)
 {
-  sleep(5);
-  char *argv[] = {"mkdir", "/home/sheinna/modul2/sedaap", NULL};
-  execv("/bin/mkdir", argv);
+    sleep(5);
+    char *argv[] = {"mkdir", "/home/sheinna/modul2/sedaap", NULL};
+    execv("/bin/mkdir", argv);
 }
 ```
 #
@@ -93,44 +98,104 @@ else
 ### Jawab 3b
 Untuk mengekstrak file zip, berarti merupakan suatu perintah baru, sehingga harus melakukan proses fork lagi dan menggunakan perintah ```unzip```, seperti berikut:
 ```c
-while(wait(&status) > 0);
-char *argv[] = {"unzip", "/home/sheinna/modul2/jpg.zip", NULL};
-execv("/usr/bin/unzip", argv);
+while((wait(&status)) > 0);
+cid3 = fork();
+if(cid3 < 0) exit(0);
+if(cid3 == 0)
+{
+    char *argv[] = {"unzip", "/home/sheinna/modul2/jpg.zip", NULL};
+    execv("/usr/bin/unzip", argv);
+}
 ```
 #
 
 ### Jawab 3c
-Untuk memindahkan direktori dari direktori hasil ekstrak ```jpg.zip``` ke dalam direktori **indomie**, sedangkan file ke dalam direktori **sedaap**, digunakan perintah ```mv``` untuk memindahkan, dan *wildcard* untuk mengambil tipe folder dengan format ```/home/sheinna/modul2/jpg/*/``` yang berarti mengambil semua direktori yang ada dari direktori jpg. Kemudian memindahkannya ke direktori tujuan yaitu ```/home/sheinna/modul2/indomie```, seperti berikut:
+Untuk memindahkan direktori dari direktori hasil ekstrak ```jpg.zip``` ke dalam direktori **indomie**, sedangkan file ke dalam direktori **sedaap**. Untuk itu, kami menggunakan library ```#include<dirent.h>``` untuk melakukan looping terhadap semua file/folder yang ada di dalam direktori ```/home/sheinna/modul2/jpg```, kemudian dengan fungsi ```d_type``` kami dapat mengetahui tipe dari file/folder yang sedang diakses. ```DT_REG``` berarti tipe file reguler. Jika dikenali sebagai file biasa, maka akan dilakukan fork dan menggunakan exec dapat memindahkan file tersebut ke dalam direktori ```/home/sheinna/modul2/sedaap``` dengan command ```mv```.
 ```c
-char *argv[] = {"mv", "/home/sheinna/modul2/jpg/*/", "/home/sheinna/modul2/indomie", NULL};
-execv("/bin/mv", argv);
+while((wait(&status)) > 0);
+cid4 = fork();
+if(cid4 < 0) exit(0);
+if(cid4 == 0)
+{
+    DIR *dirp;
+    struct dirent *entry;
+    dirp = opendir("/home/sheinna/modul2/jpg");
+    while((entry = readdir(dirp)) != NULL)
+    {
+        if(entry->d_type == DT_REG)
+        {
+            pid_t cid;
+            cid = fork();
+            if(cid < 0) exit(0);
+            if(cid == 0)
+            {
+                char namafile[105];
+                sprintf(namafile, "/home/sheinna/modul2/jpg/%s", entry->d_name);
+                char *argv[] = {"mv", namafile, "/home/sheinna/modul2/sedaap", NULL};
+                execv("/bin/mv", argv);
+            }
+        }
+    }
+}
 ```
 
-Kemudian, untuk file yang tersisa dalam direktori jpg, pastilah yang merupakan file, sehingga tinggal memindahkan seluruh file yang ada dalam direktori jpg ke tujuan yaitu ```/home/sheinna/modul2/sedaap```, seperti berikut:
+Kemudian, untuk file yang tersisa dalam direktori ```/home/sheinna/modul2/jpg```, pastilah yang merupakan folder, sehingga tinggal memindahkan seluruh file yang ada dalam direktori ```/home/sheinna/modul2/jpg``` ke direktori tujuan yaitu ```/home/sheinna/modul2/indomie```, dengan cara men-copy seluruh isi direktori ```/home/sheinna/modul2/jpg``` ke direktori ```/home/sheinna/modul2/indomie``` dengan command ```rsync```, kemudian untuk menghapus isi dari direktori asalnya, maka digunakan command ```rm -r``` untuk menghapus folder tersebut dan digunakan command ```mkdir``` untuk membuat folder tersebut kembali. Berikut kodenya:
 ```c
-char *argv[] = {"mv", "/home/sheinna/modul2/jpg/", "/home/sheinna/modul2/sedaap", NULL};
-execv("/bin/mv", argv);
-```
-#
+while((wait(&status)) > 0);
+cid5 = fork();
+if(cid5 < 0) exit(0);
+if(cid5 == 0)
+{
+    char *argv[] = {"rsync", "-r", "/home/sheinna/modul2/jpg/", "/home/sheinna/modul2/indomie", NULL};
+    execv("/usr/bin/rsync", argv);
+}
 
-### Jawab 3d
-Untuk soal 3d, diminta untuk membuat file kosong dengan nama ```coba1.txt``` di dalam semua folder yang ada dalam direktori ```indomie```, dan kemudian membuat file kosong lagi dengan nama ```coba2.txt``` di dalam semua folder tadi (```/home/sheinna/modul2/jpg/```). Untuk memberikan 3 detik sebelum membuat file ```coba2.txt```, maka dapat menggunakan fungsi ```sleep(3)```. Jika menggunakan perintah exec, dapat menggunakan perintah sebagai berikut:
-```c
-pid_t cid6;
+while((wait(&status)) > 0);
 cid6 = fork();
 if(cid6 < 0) exit(0);
 if(cid6 == 0)
 {
-  chdir("/home/sheinna/modul2/indomie");
-  char *argv[] = {"find", ".", "-type", "d", "-exec", "touch", "{}/coba1.txt", "\\;", NULL};
-  execv("/usr/bin/find", argv);
+    char *argv[] = {"rm", "-r", "/home/sheinna/modul2/jpg", NULL};
+    execv("/bin/rm", argv);
 }
-else
+
+while((wait(&status)) > 0);
+cid7 = fork();
+if(cid7 < 0) exit(0);
+if(cid7 == 0)
 {
-  sleep(3);
-  chdir("/home/sheinna/modul2/indomie");
-  char *argv[] = {"find", ".", "-type", "d", "-exec", "touch", "{}/coba2.txt", "\\;", NULL};
-  execv("/usr/bin/find", argv);
+    char *argv[] = {"mkdir", "/home/sheinna/modul2/jpg", NULL};
+    execv("/bin/mkdir", argv);
 }
+```
+#
+
+### Jawab 3d
+Untuk soal 3d, diminta untuk membuat file kosong dengan nama ```coba1.txt``` di dalam semua folder yang ada dalam direktori ```indomie```, dan kemudian membuat file kosong lagi dengan nama ```coba2.txt``` di dalam semua folder tadi (```/home/sheinna/modul2/jpg/```), kami menggunakan bantuan command ```find . -type d -exec touch {}/coba1.txt\;``` yang berarti mencari tiap direktori dan membuat file baru bernama coba1.txt di dalamnya. Untuk memberikan 3 detik sebelum membuat file ```coba2.txt```, maka dapat menggunakan fungsi ```sleep(3)```. Akan tetapi, karena direktori asalnya sendiri (```/home/sheinna/modul2/indomie/```) juga merupakan sebuah direktori, maka akan di dalam file tersebut akan terbuat juga kedua file ```coba1.txt``` dan ```coba2.txt```. Sehingga perlu ditambahkan command ```rm coba1.txt coba2.txt``` setelah mengeksekusi ```chdir("/home/sheinna/modul2/indomie/")``` agar kedua file .txt dalam direktori tersebut terhapus. Berikut kodenya:
+```c
+while((wait(&status)) > 0);
+cid8 = fork();
+if(cid8 < 0) exit(0);
+if(cid8 == 0)
+{
+    chdir("/home/sheinna/modul2/indomie/");
+    char *argv[] = {"find", ".", "-type", "d", "-exec", "touch", "{}/coba1.txt", "\;", NULL};
+    execv("/usr/bin/find", argv);
+}
+
+sleep(3);
+while((wait(&status)) > 0);
+cid8 = fork();
+if(cid8 < 0) exit(0);
+if(cid8 == 0)
+{
+    chdir("/home/sheinna/modul2/indomie/");
+    char *argv[] = {"find", ".", "-type", "d", "-exec", "touch", "{}/coba2.txt", "\;", NULL};
+    execv("/usr/bin/find", argv);
+}
+
+chdir("/home/sheinna/modul2/indomie/");
+char *argv[] = {"rm", "coba1.txt", "coba2.txt", NULL};
+execv("/bin/rm", argv);
 ```
 #
