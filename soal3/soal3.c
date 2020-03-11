@@ -10,7 +10,7 @@
 
 int main() 
 {
-	pid_t cid1, cid2, cid3, cid4, cid5, cid6, cid7, cid8;
+	pid_t cid1, cid2, cid3, cid4, cid5, cid6, cid7, cid8, cid9;
 	int status;
     cid1 = fork();
     if(cid1 < 0) exit(0);
@@ -112,8 +112,14 @@ int main()
         char *argv[] = {"find", ".", "-type", "d", "-exec", "touch", "{}/coba2.txt", "\;", NULL};
         execv("/usr/bin/find", argv);
     }
-
-    chdir("/home/sheinna/modul2/indomie/");
-    char *argv[] = {"rm", "coba1.txt", "coba2.txt", NULL};
-    execv("/bin/rm", argv);
+	
+    while((wait(&status)) > 0);
+    cid9 = fork();
+    if(cid9 < 0) exit(0);
+    if(cid9 == 0)
+    {
+        chdir("/home/sheinna/modul2/indomie/");
+    	char *argv[] = {"rm", "coba1.txt", "coba2.txt", NULL};
+    	execv("/bin/rm", argv);
+    }
 }
