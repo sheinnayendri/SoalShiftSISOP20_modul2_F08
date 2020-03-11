@@ -44,7 +44,7 @@ Soal ini meminta kami untuk membantu Kiwa membuat program sebagai berikut:
 
 ### Jawab 2a
 Untuk membuat folder dengan timestamp ```[YYYY-mm-dd_HH:ii:ss]``` dapat menggunakan fungsi ```strftime``` dari C dan menggunakan ```fork``` serta ```exec``` untuk memanggil command ```mkdir```. Agar program berjalan setiap 30 detik, maka digunakan daemon dan diberi selang 30 detik dengan ```sleep(30)```. Berikut kodenya:
-`c
+```c
 pid_t cid, cid2, cid3, cid4;
 time_t t1 = time(NULL);
 struct tm* p1 = localtime(&t1);
@@ -58,12 +58,12 @@ if(cid == 0)
     execv("/bin/mkdir", ag);
 }
 sleep(30);
-`
+```
 #
 
 ### Jawab 2b
 Untuk mendownload gambar untuk tiap folder, digunakan fungsi ```fork``` dan ```exec``` untuk memanggil fungsi ```wget```, dengan format untuk mendapatkan timestamp sama seperti di soal 2a. Sebelum menjalankan perintah tersebut, akan memanggil fungsi ```chdir(curtime)``` terlebih dahulu, agar dapat masuk ke folder tersebut. Karena membutuhkan download 20 gambar, maka digunakan loop ```for``` dengan iterasi 20 kali. Berikut kodenya:
-`c
+```c
 chdir(curtime);
 for(i = 0; i < 20; i++)
 {
@@ -81,12 +81,12 @@ for(i = 0; i < 20; i++)
     }
     sleep(5);
 }
-`
+```
 #
 
 ### Jawab 2c
 Setelah keluar dari loop (sudah mendownload 20 gambar), maka perlu melakukan zip folder tadi dengan nama yang sama yaitu nama folder tadi (curtime). Untuk mendapatkan nama folder, digunakan fungsi ```strcpy(curtime3, curtime)``` yang berarti variable curtime3 akan berisi sama dengan curtime (nama folder), kemudian dilanjutkan dengan fungsi ```strcpy(curtime3, ".zip")``` agar menambahkan ekstensi ```.zip```. Untuk memanggil fungsi ```zip```, harus menggunakan ```fork``` dan ```exec``` lagi. Sebelumnya, maka harus berpindah ke direktori parent (keluar), karena akan dilakukan zip, dengan command ```chdir("..")```. Dan kemudian command ```rm -r``` agar folder awalnya terhapus. Berikut kodenya:
-`c
+```c
 while(wait(&stat2) > 0);
 chdir("..");
 strcpy(curtime3, curtime);
@@ -103,12 +103,12 @@ while(wait(&stat3) > 0);
 
 char *ag[] = {"rm", "-r", curtime, NULL};
 execv("/bin/rm", ag);
-`
+```
 #
 
 ### Jawab 2d
 Program killer yang kami buat dalam bentuk bash, di mana dituliskan dari program C dengan command ```fopen``` terlebih dahulu untuk membuat file baru yang akan dituliskan, dengan command ```w```, dan command ```fprintf``` untuk menuliskan source code killer. Kemudian memanggil fungsi ```exec``` dan ```fork``` lagi untuk mengganti hak akses file tersebut menggunakan command ```chmod u+x kill.sh```, yang berarti user dapat mengeksekusi file kill.sh tersebut. Berikut kodenya:
-`c
+```c
 FILE* kill;
 kill = fopen("kill.sh", "w");
 fprintf(kill, "#!/bin/bash\nkill %d\necho \'Killed program.\'\nrm \"$0\"", getpid());
@@ -122,12 +122,12 @@ if(cid = 0)
     execv("/bin/chmod", ag);
 }
 while(wait(&stat) > 0);
-`
+```
 #
 
 ### Jawab 2e
 Untuk menerima argumen, digunakan parameter di fungsi main, dalam bentuk argc (untuk mengetahui berapa banyak argumen), dan array argv yang berisi argumen yang dipassing. Jika argumen yang diinginkan berupa ```-a``` dan ```-b```, artinya huruf a dan b berada pada array argv\[1]\[1] karena di argumen kedua dan karakter kedua (*zero indexing*). Kemudian untuk membedakan mode a, di mana program langsung berhenti tanpa menyelesaikan pekerjaannya dulu, maka diberi command ```if``` di dalam loop pembuatan folder dalam ```while(1)```, agar jika mode yang dipassing adalah a, dapat langsung memberikan sinyal hangup dengan ```SIGHUP``` dengan bantuan fungsi ```prctl```. Berikut kodenya:
-`c
+```c
 int main(int argc, char* argv[])
 {
     if(argc != 2 || (argv[1][1] != 'a' && argv[1][1] != 'b')) 
@@ -144,7 +144,7 @@ int main(int argc, char* argv[])
     }
     ...
 }
-`
+```
 #
 
 ## Soal3
