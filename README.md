@@ -85,7 +85,7 @@ for(i = 0; i < 20; i++)
 #
 
 ### Jawab 2c
-Setelah keluar dari loop (sudah mendownload 20 gambar), maka perlu melakukan zip folder tadi dengan nama yang sama yaitu nama folder tadi (curtime). Untuk mendapatkan nama folder, digunakan fungsi ```strcpy(curtime3, curtime)``` yang berarti variable curtime3 akan berisi sama dengan curtime (nama folder), kemudian dilanjutkan dengan fungsi ```strcpy(curtime3, ".zip")``` agar menambahkan ekstensi ```.zip```. Untuk memanggil fungsi ```zip```, harus menggunakan ```fork``` dan ```exec``` lagi. Sebelumnya, maka harus berpindah ke direktori parent (keluar), karena akan dilakukan zip, dengan command ```chdir("..")```. Dan kemudian command ```rm -r``` agar folder awalnya terhapus. Berikut kodenya:
+Setelah keluar dari loop (sudah mendownload 20 gambar), maka perlu melakukan zip folder tadi dengan nama yang sama yaitu nama folder tadi (curtime). Untuk mendapatkan nama folder, digunakan fungsi ```strcpy(curtime3, curtime)``` yang berarti variable curtime3 akan berisi sama dengan curtime (nama folder), kemudian dilanjutkan dengan fungsi ```strcat(curtime3, ".zip")``` agar menambahkan ekstensi ```.zip```. Untuk memanggil fungsi ```zip```, harus menggunakan ```fork``` dan ```exec``` lagi. Sebelumnya, maka harus berpindah ke direktori parent (keluar), karena akan dilakukan zip, dengan command ```chdir("..")```. Dan kemudian command ```rm -r``` agar folder awalnya terhapus. Berikut kodenya:
 ```c
 while(wait(&stat2) > 0);
 chdir("..");
