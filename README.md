@@ -158,7 +158,7 @@ Soal ini meminta kami untuk membantu Jaya dalam membuat tugas yang berbeda tapi 
 ### Jawab 3a
 Dikarenakan tidak boleh memakai fungsi mkdir dari C, maka kami harus menggunakan fungsi ```fork``` dan ```exec``` agar dapat menjalankan beberapa perintah secara bersamaan, dan memanggil fungsi ```mkdir``` melalui exec. Di sini kami menggunakan fungsi ```sleep(5)``` agar dapat memberi delay 5 detik sebelum membuat folder **sedaap**, seperti berikut:
 ```c
-pid_t cid1, cid2, cid3, cid4, cid5, cid6, cid7, cid8;
+pid_t cid1, cid2, cid3, cid4, cid5, cid6, cid7, cid8, cid9;
 int status;
 cid1 = fork();
 if(cid1 < 0) exit(0);
@@ -279,8 +279,14 @@ if(cid8 == 0)
     execv("/usr/bin/find", argv);
 }
 
-chdir("/home/sheinna/modul2/indomie/");
-char *argv[] = {"rm", "coba1.txt", "coba2.txt", NULL};
-execv("/bin/rm", argv);
+while((wait(&status)) > 0);
+cid9 = fork();
+if(cid9 < 0) exit(0);
+if(cid9 == 0)
+{
+    chdir("/home/sheinna/modul2/indomie/");
+    char *argv[] = {"rm", "coba1.txt", "coba2.txt", NULL};
+    execv("/bin/rm", argv);
+}
 ```
 #
