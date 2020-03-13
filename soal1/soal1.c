@@ -14,7 +14,7 @@ int cekConvert(char s[])
 	int angka = 0;
 	for(int i = 0; i < strlen(s); i++)
 	{
-		if(s[i] < '0' || s[i] > '9') return -1;
+		if((s[i] < '0' || s[i] > '9') && s[i] != '*') return -1;
 		angka += (s[i] - '0');
 		angka *= 10;
 	}
@@ -23,8 +23,7 @@ int cekConvert(char s[])
 }
 
 int main(int arg, char *argv[]) {
-  // printf("string %s\n", argv[3]);
-  // printf("angka %d\n", atoi(argv[3]));
+
   pid_t pid, sid;        // Variabel untuk menyimpan PID
 
   pid = fork();     // Menyimpan PID dari Child Process
@@ -51,39 +50,28 @@ int main(int arg, char *argv[]) {
   if ((chdir("/")) < 0) {
     exit(EXIT_FAILURE);
   }
+  int detik = cekConvert(argv[1]);
+  int menit = cekConvert(argv[2]);
+  int jam = cekConvert(argv[3]);
+  if(detik > 59 || detik < 0 || menit > 59 || menit < 0 || jam < 0 || jam > 23){
+    printf("eror waktu salah\n");
+    exit(EXIT_FAILURE);    
+  }
+
+
   if(arg != 5){
     printf("argumen tidak sesuai\n");
     exit(EXIT_FAILURE);
   }
-	
-  if(cekConvert(argv[1]) == -1 || cekConvert(argv[2]) == -1 || cekConvert(argv[3]) == -1) 
-  {
-      printf("eror bukan angka\n");
-      exit(0);
-  }
-	
   if(argv[4][strlen(argv[4])-3] != '.' || argv[4][strlen(argv[4])-2] != 's' || argv[4][strlen(argv[4])-1] != 'h'){
       printf("eror bukan bash\n");
       exit(EXIT_FAILURE);
   }
 
-  if(strcmp(argv[2],"0") !=0 && atoi(argv[2]) == 0){
-    if(strcmp(argv[2],"*") !=0){
+  if(cekConvert(argv[1]) == -1 || cekConvert(argv[2]) == -1 || cekConvert(argv[3]) == -1) 
+  {
       printf("eror bukan angka\n");
-      exit(EXIT_FAILURE);
-    }
-  }
-  if(strcmp(argv[2],"0") !=0 && atoi(argv[2]) == 0){
-    if(strcmp(argv[2],"*") !=0){
-      printf("eror bukan angka\n");
-      exit(EXIT_FAILURE);
-    }
-  }
-  if(strcmp(argv[3],"0") !=0 && atoi(argv[3]) == 0){
-    if(strcmp(argv[3],"*") !=0){
-      printf("eror bukan angka\n");
-      exit(EXIT_FAILURE);
-    }
+      exit(0);
   }
   
 
@@ -94,7 +82,6 @@ int main(int arg, char *argv[]) {
   close(STDOUT_FILENO);
   close(STDERR_FILENO);
   
-	// printf("%s", ctime(&now));
 
 	struct tm *local;
   char *bash[] = {"bash", argv[4], NULL};
