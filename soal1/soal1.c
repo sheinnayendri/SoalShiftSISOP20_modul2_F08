@@ -9,6 +9,19 @@
 #include <string.h>
 #include <time.h>
 
+int cekConvert(char s[])
+{
+	int angka = 0;
+	for(int i = 0; i < strlen(s); i++)
+	{
+		if(s[i] < '0' || s[i] > '9') return -1;
+		angka += (s[i] - '0');
+		angka *= 10;
+	}
+	angka /= 10;
+	return angka;
+}
+
 int main(int arg, char *argv[]) {
   // printf("string %s\n", argv[3]);
   // printf("angka %d\n", atoi(argv[3]));
@@ -42,6 +55,13 @@ int main(int arg, char *argv[]) {
     printf("argumen tidak sesuai\n");
     exit(EXIT_FAILURE);
   }
+	
+  if(cekConvert(argv[1]) == -1 || cekConvert(argv[2]) == -1 || cekConvert(argv[3]) == -1) 
+  {
+      printf("eror bukan angka\n");
+      exit(0);
+  }
+	
   if(argv[4][strlen(argv[4])-3] != '.' || argv[4][strlen(argv[4])-2] != 's' || argv[4][strlen(argv[4])-1] != 'h'){
       printf("eror bukan bash\n");
       exit(EXIT_FAILURE);
