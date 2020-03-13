@@ -67,9 +67,28 @@ int main(int arg, char *argv[]) {
 
   if(cekConvert(argv[1]) == -1 || cekConvert(argv[2]) == -1 || cekConvert(argv[3]) == -1) 
   {
-      printf("eror bukan angka atau angka tidak sesuai\n");
+      printf("eror bukan angka\n");
       exit(0);
   }
+  if(strcmp(argv[1], "*") != 0){
+    if(detik > 59 || detik < 0){
+      printf("eror waktu salah\n");
+      exit(EXIT_FAILURE);   
+    }
+  }
+  if(strcmp(argv[2], "*") != 0){
+    if(menit > 59 || menit < 0){
+      printf("eror waktu salah\n");
+      exit(EXIT_FAILURE);   
+    }
+  }
+    if(strcmp(argv[3], "*") != 0){
+    if(jam > 23 || jam < 0){
+      printf("eror waktu salah\n");
+      exit(EXIT_FAILURE);   
+    }
+  }
+  
   // if(detik > 59 || detik < 0 || menit > 59 || menit < 0 || jam < 0 || jam > 23){
   //   printf("eror waktu salah\n");
   //   exit(EXIT_FAILURE);    
