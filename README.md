@@ -10,7 +10,18 @@ Soal Shift Sistem Operasi 2020
 #
 
 ## Soal1
-
+di soal 1 kita diminta membuat program C yang menyerupai crontab untuk menjalankan script bash dengan
+ketentuan sebagai berikut:
+1. (a) Program menerima 4 argumen berupa:
+    * Detik: 0-59 atau * (any value)
+    * Menit: 0-59 atau * (any value)
+    * Jam: 0-23 atau * (any value)
+    * Path file .sh
+2. (b) Program akan mengeluarkan pesan error jika argumen yang diberikan tidak
+sesuai.
+3. (c) Program hanya menerima 1 config cron.
+4. (d) Program berjalan di background (daemon).
+5. (e) tidak menggunakan system().
 #
 
 ### Jawab 1a
@@ -18,7 +29,37 @@ Soal Shift Sistem Operasi 2020
 #
 
 ### Jawab 1b
+```c
+.....
+if(arg != 5){
+    printf("argumen tidak sesuai\n");
+    exit(EXIT_FAILURE);
+  }
+  if(argv[4][strlen(argv[4])-3] != '.' || argv[4][strlen(argv[4])-2] != 's' || argv[4][strlen(argv[4])-1] != 'h'){
+      printf("eror bukan bash\n");
+      exit(EXIT_FAILURE);
+  }
 
+  if(strcmp(argv[2],"0") !=0 && atoi(argv[2]) == 0){
+    if(strcmp(argv[2],"*") !=0){
+      printf("eror bukan angka\n");
+      exit(EXIT_FAILURE);
+    }
+  }
+  if(strcmp(argv[2],"0") !=0 && atoi(argv[2]) == 0){
+    if(strcmp(argv[2],"*") !=0){
+      printf("eror bukan angka\n");
+      exit(EXIT_FAILURE);
+    }
+  }
+  if(strcmp(argv[3],"0") !=0 && atoi(argv[3]) == 0){
+    if(strcmp(argv[3],"*") !=0){
+      printf("eror bukan angka\n");
+      exit(EXIT_FAILURE);
+    }
+  }
+ .....
+```
 #
 
 ### Jawab 1c
@@ -30,7 +71,10 @@ Soal Shift Sistem Operasi 2020
 #
 
 ### Jawab 1e
-
+```c
+char *bash[] = {"bash", argv[4], NULL};
+execv("/bin/bash", bash);
+```
 #
 
 ## Soal2
