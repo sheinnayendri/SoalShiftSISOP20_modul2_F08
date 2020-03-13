@@ -59,6 +59,10 @@ if(cid == 0)
 }
 sleep(30);
 ```
+Hasil eksekusi potongan source code di atas:
+
+![Screenshot from 2020-03-13 11-32-42](https://user-images.githubusercontent.com/48936125/76591808-00827880-6524-11ea-9d19-1583186b8c5b.png)
+
 #
 
 ### Jawab 2b
@@ -82,6 +86,10 @@ for(i = 0; i < 20; i++)
     sleep(5);
 }
 ```
+Hasil eksekusi untuk download 20 gambar dengan selang 5 detik dengan ukuran tertentu:
+
+![Screenshot from 2020-03-13 11-32-55](https://user-images.githubusercontent.com/48936125/76591809-011b0f00-6524-11ea-851f-03f941fe7bad.png)
+
 #
 
 ### Jawab 2c
@@ -104,6 +112,10 @@ while(wait(&stat3) > 0);
 char *ag[] = {"rm", "-r", curtime, NULL};
 execv("/bin/rm", ag);
 ```
+Hasil eksekusi untuk melakukan zip folder yang sudah berisi 20 gambar:
+
+![Screenshot from 2020-03-13 11-34-06](https://user-images.githubusercontent.com/48936125/76591811-01b3a580-6524-11ea-8dc4-524604de10a5.png)
+
 #
 
 ### Jawab 2d
@@ -123,6 +135,10 @@ if(cid = 0)
 }
 while(wait(&stat) > 0);
 ```
+Hasil eksekusi potongan source code di atas adalah berhasil terbuatnya program killer bash yang digenerate saat program soal2 dijalankan:
+
+![Screenshot from 2020-03-13 11-32-42](https://user-images.githubusercontent.com/48936125/76591808-00827880-6524-11ea-9d19-1583186b8c5b.png)
+
 #
 
 ### Jawab 2e
@@ -145,6 +161,22 @@ int main(int argc, char* argv[])
     ...
 }
 ```
+Hasil eksekusi menunjukkan bahwa argumen yang diterima hanya -a dan -b:
+
+![Screenshot from 2020-03-13 11-32-42](https://user-images.githubusercontent.com/48936125/76591808-00827880-6524-11ea-9d19-1583186b8c5b.png)
+
+Untuk eksekusi mode -a, program segera ter-kill setelah bash kill.sh dieksekusi, beserta program kill.sh sendiri:
+
+![Screenshot from 2020-03-13 11-34-54](https://user-images.githubusercontent.com/48936125/76591817-02e4d280-6524-11ea-9b99-7c49313f729f.png)
+
+Sedangkan untuk mode -b, program masih menyelesaikan download 20 gambar sebelum program tersebut dibunuh:
+
+![Screenshot from 2020-03-13 11-35-24](https://user-images.githubusercontent.com/48936125/76591792-f9f40100-6523-11ea-9197-91409926cea6.png)
+![Screenshot from 2020-03-13 11-35-39](https://user-images.githubusercontent.com/48936125/76591797-fbbdc480-6523-11ea-89ad-ed39313b328e.png)
+![Screenshot from 2020-03-13 11-35-47](https://user-images.githubusercontent.com/48936125/76591799-fceef180-6523-11ea-9622-d2fe12907511.png)
+![Screenshot from 2020-03-13 11-36-34](https://user-images.githubusercontent.com/48936125/76591801-fe201e80-6523-11ea-9331-d5aab34d433e.png)
+![Screenshot from 2020-03-13 11-37-05](https://user-images.githubusercontent.com/48936125/76591805-ffe9e200-6523-11ea-993a-f60d8f3832bd.png)
+
 #
 
 ## Soal3
@@ -178,6 +210,10 @@ if(cid2 == 0)
     execv("/bin/mkdir", argv);
 }
 ```
+Dari eksekusi program di atas, folder ```indomie``` dan ```sedaap``` terbuat di path ```/home/sheinna/modul2/```:
+
+![Screenshot from 2020-03-13 11-30-42](https://user-images.githubusercontent.com/48936125/76591397-d4b2c300-6522-11ea-82e3-b65996b429bd.png)
+
 #
 
 ### Jawab 3b
@@ -192,6 +228,10 @@ if(cid3 == 0)
     execv("/usr/bin/unzip", argv);
 }
 ```
+Dari eksekusi program di atas, file ```jpg.zip``` telah diunzip dan terbuat menjadi folder ```jpg``` pada path yang diinginkan:
+
+![Screenshot from 2020-03-13 11-30-42](https://user-images.githubusercontent.com/48936125/76591397-d4b2c300-6522-11ea-82e3-b65996b429bd.png)
+
 #
 
 ### Jawab 3c
@@ -223,6 +263,10 @@ if(cid4 == 0)
     }
 }
 ```
+Hasil eksekusi program di atas:
+
+![Screenshot from 2020-03-13 11-31-30](https://user-images.githubusercontent.com/48936125/76591414-dd0afe00-6522-11ea-9ad5-44be45d167b6.png)
+
 
 Kemudian, untuk file yang tersisa dalam direktori ```/home/sheinna/modul2/jpg```, pastilah yang merupakan folder, sehingga tinggal memindahkan seluruh file yang ada dalam direktori ```/home/sheinna/modul2/jpg``` ke direktori tujuan yaitu ```/home/sheinna/modul2/indomie```, dengan cara men-copy seluruh isi direktori ```/home/sheinna/modul2/jpg``` ke direktori ```/home/sheinna/modul2/indomie``` dengan command ```rsync```, kemudian untuk menghapus isi dari direktori asalnya, maka digunakan command ```rm -r``` untuk menghapus folder tersebut dan digunakan command ```mkdir``` untuk membuat folder tersebut kembali. Berikut kodenya:
 ```c
@@ -253,6 +297,11 @@ if(cid7 == 0)
     execv("/bin/mkdir", argv);
 }
 ```
+Hasil eksekusi program di atas:
+
+![Screenshot from 2020-03-13 11-31-04](https://user-images.githubusercontent.com/48936125/76591401-d7151d00-6522-11ea-911d-d86406d111de.png)
+![Screenshot from 2020-03-13 11-31-37](https://user-images.githubusercontent.com/48936125/76591418-df6d5800-6522-11ea-9578-993ec70701df.png)
+
 #
 
 ### Jawab 3d
@@ -289,4 +338,9 @@ if(cid9 == 0)
     execv("/bin/rm", argv);
 }
 ```
+Hasil eksekusi dari potongan source code di atas:
+
+![Screenshot from 2020-03-13 11-31-13](https://user-images.githubusercontent.com/48936125/76591406-d8dee080-6522-11ea-898f-cb9ed13ade63.png)
+![Screenshot from 2020-03-13 11-31-22](https://user-images.githubusercontent.com/48936125/76591410-db413a80-6522-11ea-90f8-975271861e9c.png)
+
 #
