@@ -11,6 +11,7 @@
 
 int cekConvert(char s[])
 {
+  if(s[0] == '*') return -2;
 	int angka = 0;
 	for(int i = 0; i < strlen(s); i++)
 	{
@@ -53,10 +54,6 @@ int main(int arg, char *argv[]) {
   int detik = cekConvert(argv[1]);
   int menit = cekConvert(argv[2]);
   int jam = cekConvert(argv[3]);
-  if(detik > 59 || detik < 0 || menit > 59 || menit < 0 || jam < 0 || jam > 23){
-    printf("eror waktu salah\n");
-    exit(EXIT_FAILURE);    
-  }
 
 
   if(arg != 5){
@@ -70,9 +67,13 @@ int main(int arg, char *argv[]) {
 
   if(cekConvert(argv[1]) == -1 || cekConvert(argv[2]) == -1 || cekConvert(argv[3]) == -1) 
   {
-      printf("eror bukan angka\n");
+      printf("eror bukan angka atau angka tidak sesuai\n");
       exit(0);
   }
+  // if(detik > 59 || detik < 0 || menit > 59 || menit < 0 || jam < 0 || jam > 23){
+  //   printf("eror waktu salah\n");
+  //   exit(EXIT_FAILURE);    
+  // }
   
 
 	time_t now;
