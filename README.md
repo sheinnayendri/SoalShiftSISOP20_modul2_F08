@@ -123,7 +123,7 @@ Program killer yang kami buat dalam bentuk bash, di mana dituliskan dari program
 ```c
 FILE* kill;
 kill = fopen("kill.sh", "w");
-fprintf(kill, "#!/bin/bash\nkill %d\necho \'Killed program.\'\nrm \"$0\"", getpid());
+fprintf(kill, "#!/bin/bash\nkill %d\nkill %d\necho \'Killed program.\'\nrm \"$0\"", getpid() + 2, getpid() + 3);
 fclose(kill);
 pid_t cid;
 cid = fork();
