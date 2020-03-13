@@ -10,6 +10,8 @@
 #include <time.h>
 
 int main(int arg, char *argv[]) {
+  // printf("string %s\n", argv[3]);
+  // printf("angka %d\n", atoi(argv[3]));
   pid_t pid, sid;        // Variabel untuk menyimpan PID
 
   pid = fork();     // Menyimpan PID dari Child Process
@@ -36,14 +38,43 @@ int main(int arg, char *argv[]) {
   if ((chdir("/")) < 0) {
     exit(EXIT_FAILURE);
   }
+  if(arg != 5){
+    printf("argumen tidak sesuai\n");
+    exit(EXIT_FAILURE);
+  }
+  if(argv[4][strlen(argv[4])-3] != '.' || argv[4][strlen(argv[4])-2] != 's' || argv[4][strlen(argv[4])-1] != 'h'){
+      printf("eror bukan bash\n");
+      exit(EXIT_FAILURE);
+  }
 
+  if(strcmp(argv[2],"0") !=0 && atoi(argv[2]) == 0){
+    if(strcmp(argv[2],"*") !=0){
+      printf("eror bukan angka\n");
+      exit(EXIT_FAILURE);
+    }
+  }
+  if(strcmp(argv[2],"0") !=0 && atoi(argv[2]) == 0){
+    if(strcmp(argv[2],"*") !=0){
+      printf("eror bukan angka\n");
+      exit(EXIT_FAILURE);
+    }
+  }
+  if(strcmp(argv[3],"0") !=0 && atoi(argv[3]) == 0){
+    if(strcmp(argv[3],"*") !=0){
+      printf("eror bukan angka\n");
+      exit(EXIT_FAILURE);
+    }
+  }
+  
+
+	time_t now;
+	time(&now);
+  
   close(STDIN_FILENO);
   close(STDOUT_FILENO);
   close(STDERR_FILENO);
   
-	time_t now;
-	time(&now);
-	printf("%s", ctime(&now));
+	// printf("%s", ctime(&now));
 
 	struct tm *local;
   char *bash[] = {"bash", argv[4], NULL};
