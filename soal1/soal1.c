@@ -50,6 +50,9 @@ int main(int arg, char *argv[]) {
 
   while (1) {
     pid_t child_id;
+    
+    time(&now);
+    local = localtime(&now); 
     if(strcmp(argv[1], "*") == 0){ 
         if(strcmp(argv[2], "*") == 0){ 
           if(strcmp(argv[3], "*") == 0){ //setiap detik setiap menit setiap jam
@@ -94,7 +97,7 @@ int main(int arg, char *argv[]) {
           }
           else{
             while (1){
-              if(atoi(argv[3]) == local->tm_hour){ //setiap detik BEDA menit BEDA jam
+              if(atoi(argv[2]) == local->tm_min && atoi(argv[3]) == local->tm_hour){ //setiap detik BEDA menit BEDA jam
                 child_id = fork();
                 if(child_id == 0){
                   execv("/bin/bash", bash);
