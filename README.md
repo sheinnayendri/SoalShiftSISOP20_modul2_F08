@@ -25,7 +25,10 @@ sesuai.
 #
 
 ### Jawab 1a
-
+argumen dari command di terminal adalah seperti:
+```sh
+./no1 \* \* \* /home/rapuyy/Downloads/tugas/modul2/prak/no1.sh #//contoh
+```
 #
 
 ### Jawab 1b
@@ -40,37 +43,41 @@ if(arg != 5){
       exit(EXIT_FAILURE);
   }
 
-  if(strcmp(argv[2],"0") !=0 && atoi(argv[2]) == 0){
-    if(strcmp(argv[2],"*") !=0){
+  if(cekConvert(argv[1]) == -1 || cekConvert(argv[2]) == -1 || cekConvert(argv[3]) == -1) 
+  {
       printf("eror bukan angka\n");
-      exit(EXIT_FAILURE);
+      exit(0);
+  }
+  if(strcmp(argv[1], "*") != 0){
+    if(detik > 59 || detik < 0){
+      printf("eror waktu salah\n");
+      exit(EXIT_FAILURE);   
     }
   }
-  if(strcmp(argv[2],"0") !=0 && atoi(argv[2]) == 0){
-    if(strcmp(argv[2],"*") !=0){
-      printf("eror bukan angka\n");
-      exit(EXIT_FAILURE);
+  if(strcmp(argv[2], "*") != 0){
+    if(menit > 59 || menit < 0){
+      printf("eror waktu salah\n");
+      exit(EXIT_FAILURE);   
     }
   }
-  if(strcmp(argv[3],"0") !=0 && atoi(argv[3]) == 0){
-    if(strcmp(argv[3],"*") !=0){
-      printf("eror bukan angka\n");
-      exit(EXIT_FAILURE);
+    if(strcmp(argv[3], "*") != 0){
+    if(jam > 23 || jam < 0){
+      printf("eror waktu salah\n");
+      exit(EXIT_FAILURE);   
     }
   }
  .....
 ```
 #
 
-### Jawab 1c
-
-#
-
 ###  Jawab 1d
+bukti berjalan di background
+![Screenshot from 2020-03-13 17-35-43](https://user-images.githubusercontent.com/56967667/76613655-21ad8e00-6551-11ea-8870-fb5f946a40a7.png)
 
 #
 
 ### Jawab 1e
+cara kami untuk tidak menggunakan system() adalah dengan menggunakan execv() :
 ```c
 char *bash[] = {"bash", argv[4], NULL};
 execv("/bin/bash", bash);
