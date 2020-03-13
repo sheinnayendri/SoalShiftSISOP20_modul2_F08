@@ -29,9 +29,11 @@ argumen dari command di terminal adalah seperti:
 ```sh
 ./no1 \* \* \* /home/rapuyy/Downloads/tugas/modul2/prak/no1.sh #//contoh
 ```
+penjelasan: file ```no1.sh``` ini berisi bash script untuk membuat folder dengan format waktu.
 #
 
 ### Jawab 1b
+untuk error handling itu sendiri kami masukkan beberapa kemungkinan, yaitu jika argumen tidak sesuai, file bukan bash script (.sh), waktu tidak sesuai, dan waktu input terdapat karakter selain angka dan '*' .
 ```c
 .....
 if(arg != 5){
