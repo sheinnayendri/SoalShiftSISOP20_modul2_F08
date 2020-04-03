@@ -1,126 +1,175 @@
-#include<stdlib.h>
-#include<stdio.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+#include <time.h>
+#include <wait.h>
+#include <unistd.h>
+#include <errno.h>
+#include <fcntl.h>
 #include<sys/types.h>
 #include<sys/stat.h>
-#include<unistd.h>
-#include<wait.h>
-#include<time.h>
-#include<stdbool.h>
-#include<dirent.h>
+#include <syslog.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <dirent.h>
+#include <pthread.h>
+#include <limits.h>
 
-int main() 
+typedef struct arg_struct {
+    char asal[1000];
+    char cwd[1000];
+}arg_struct;
+
+int is_regular_file(const char *path) //jika 0 bukan file
 {
-	pid_t cid1, cid2, cid3, cid4, cid5, cid6, cid7, cid8, cid9;
-	int status;
-    cid1 = fork();
-    if(cid1 < 0) exit(0);
-    if(cid1 == 0) 
-    {
-        char *argv[] = {"mkdir", "/home/sheinna/modul2/indomie", NULL};
-        execv("/bin/mkdir", argv);
-    }
-
-    while((wait(&status)) > 0);
-    cid2 = fork();
-    if(cid2 < 0) exit(0);
-    if(cid2 == 0)
-    {
-        sleep(5);
-        char *argv[] = {"mkdir", "/home/sheinna/modul2/sedaap", NULL};
-        execv("/bin/mkdir", argv);
-    }
-
-    while((wait(&status)) > 0);
-    cid3 = fork();
-    if(cid3 < 0) exit(0);
-    if(cid3 == 0)
-    {
-        char *argv[] = {"unzip", "/home/sheinna/modul2/jpg.zip", NULL};
-        execv("/usr/bin/unzip", argv);
-    }
-
-    while((wait(&status)) > 0);
-    cid4 = fork();
-    if(cid4 < 0) exit(0);
-    if(cid4 == 0)
-    {
-        DIR *dirp;
-        struct dirent *entry;
-        dirp = opendir("/home/sheinna/modul2/jpg");
-        while((entry = readdir(dirp)) != NULL)
-        {
-            if(entry->d_type == DT_REG)
-            {
-                pid_t cid;
-                cid = fork();
-                if(cid < 0) exit(0);
-                if(cid == 0)
-                {
-                    char namafile[105];
-                    sprintf(namafile, "/home/sheinna/modul2/jpg/%s", entry->d_name);
-                    char *argv[] = {"mv", namafile, "/home/sheinna/modul2/sedaap", NULL};
-                    execv("/bin/mv", argv);
-                }
-            }
-        }
-    }
-
-    while((wait(&status)) > 0);
-    cid5 = fork();
-    if(cid5 < 0) exit(0);
-    if(cid5 == 0)
-    {
-        char *argv[] = {"rsync", "-r", "/home/sheinna/modul2/jpg/", "/home/sheinna/modul2/indomie", NULL};
-        execv("/usr/bin/rsync", argv);
-    }
-    
-    while((wait(&status)) > 0);
-    cid6 = fork();
-    if(cid6 < 0) exit(0);
-    if(cid6 == 0)
-    {
-        char *argv[] = {"rm", "-r", "/home/sheinna/modul2/jpg", NULL};
-        execv("/bin/rm", argv);
-    }
-    
-    while((wait(&status)) > 0);
-    cid7 = fork();
-    if(cid7 < 0) exit(0);
-    if(cid7 == 0)
-    {
-        char *argv[] = {"mkdir", "/home/sheinna/modul2/jpg", NULL};
-        execv("/bin/mkdir", argv);
-    }
-
-    while((wait(&status)) > 0);
-    cid8 = fork();
-    if(cid8 < 0) exit(0);
-    if(cid8 == 0)
-    {
-        chdir("/home/sheinna/modul2/indomie/");
-        char *argv[] = {"find", ".", "-type", "d", "-exec", "touch", "{}/coba1.txt", "\;", NULL};
-        execv("/usr/bin/find", argv);
-    }
-    
-    sleep(3);
-    while((wait(&status)) > 0);
-    cid8 = fork();
-    if(cid8 < 0) exit(0);
-    if(cid8 == 0)
-    {
-        chdir("/home/sheinna/modul2/indomie/");
-        char *argv[] = {"find", ".", "-type", "d", "-exec", "touch", "{}/coba2.txt", "\;", NULL};
-        execv("/usr/bin/find", argv);
-    }
-	
-    while((wait(&status)) > 0);
-    cid9 = fork();
-    if(cid9 < 0) exit(0);
-    if(cid9 == 0)
-    {
-        chdir("/home/sheinna/modul2/indomie/");
-    	char *argv[] = {"rm", "coba1.txt", "coba2.txt", NULL};
-    	execv("/bin/rm", argv);
-    }
-    return 0;
+    struct stat path_stat;
+    stat(path, &path_stat);
+    return S_ISREG(path_stat.st_mode);
 }
+
+void pindahFile(char *argv, char *cwd){
+  // char string[] = "/home/rapuyy/modul3/no3.c";
+  printf("stringvoid = %s\n", argv);
+  printf("stringvoid = %s\n", cwd);
+  
+  char string[1000];
+  strcpy(string, argv);
+  int isFile = is_regular_file(string);
+  
+  char dot = '.'; 
+  char slash = '/';
+  char* tipe = strrchr(string, dot); 
+  char* nama = strrchr(string, slash);
+  
+  char tipeLow[100];
+  if(tipe)
+  {
+    if((tipe[strlen(tipe)-1] >= 'a' && tipe[strlen(tipe)-1] <= 'z') || (tipe[strlen(tipe)-1] >= 'A' && tipe[strlen(tipe)-1] <= 'Z'))
+    {
+      strcpy(tipeLow, tipe);
+      for(int i = 0; tipeLow[i]; i++){
+        tipeLow[i] = tolower(tipeLow[i]);
+      }
+    }
+  }
+  else
+  {
+    if(!isFile){
+      printf("ini adalah folder, salah argumen\n");
+      return;
+    }
+    else
+    {
+      strcpy(tipeLow, " Unknown");
+    }
+  }
+    
+  mkdir((tipeLow + 1), 0777);
+
+
+  // printf("Current working void dir: %s\n", cwd);
+  // printf("file : %s\n", argv);
+  size_t len = 0 ;
+  // strcpy
+  char a[1000] ; //res
+  strcpy(a, argv);
+  char b[1000] ; //des
+  strcpy(b, cwd);
+  strcat(b, "/");
+  strcat(b, tipeLow+1);
+  strcat(b, nama);
+  printf("b = %s\n", b);
+
+  char buffer[BUFSIZ] = { '\0' } ;
+
+  FILE* in = fopen( a, "rb" ) ;
+  FILE* out = fopen( b, "wb" ) ;
+
+  if( in == NULL || out == NULL )
+  {
+      perror( "An error occured while opening files!!!" ) ;
+      in = out = 0 ;
+  }
+  else    // add this else clause
+  {
+      while( (len = fread( buffer, BUFSIZ, 1, in)) > 0 )
+      {
+          fwrite( buffer, BUFSIZ, 1, out ) ;
+      }
+  
+      fclose(in) ;
+      fclose(out) ;
+      if(!remove(a))
+      {
+         printf( "File successfully moved\n");
+      }
+      else
+      {
+        printf( "An error occured while moving the file!!!\n" ) ;
+      }
+      
+  }
+}
+
+void *pindahf(void* arg){
+  arg_struct args = *(arg_struct*) arg;
+  printf("stringthr = %s\n", args.asal);
+  // printf("stringthr = %s\n", args.cwd);
+  pindahFile(args.asal, args.cwd);
+  pthread_exit(0);
+}
+
+void sortHere(char *asal){
+  arg_struct args;
+  // args.cwd = "/home/rapuyy/modul3";
+  strcpy(args.cwd,"/home/rapuyy/modul3");
+  DIR *dirp;
+    struct dirent *entry;
+    dirp = opendir(asal);
+    int index = 0;
+    while((entry = readdir(dirp)) != NULL)
+    {
+      if(entry->d_type == DT_REG)
+      {
+          char namafile[105];
+          sprintf(namafile, "/home/rapuyy/modul3/%s", entry->d_name);
+          pthread_create(&tid[index], NULL, pindahf, (void *)&args);
+          printf("%s\n", namafile);
+          sleep(1);
+          index++;
+      }
+    }
+}
+int main(int argc, char* argv[]) 
+{ 
+
+  // char cwd[1000];
+  arg_struct args;
+  getcwd(args.cwd, sizeof(args.cwd));
+  pthread_t tid[500]; //max 500 thread
+
+  
+  if(strcmp(argv[1],"-f")==0)//command -f--------------------------------------------------------------
+  {
+    int index = 0;
+    for (int i = 2; i < argc; i++)
+    {
+      strcpy(args.asal, argv[i]);
+      // printf("string awal %s\n",  argv[i]);
+      pthread_create(&tid[index], NULL, pindahf, (void *)&args);
+      sleep(1);
+      index++;
+      // printf("string asal = %s\n", args.asal);
+    }
+    for (int i = 0; i < index; i++) {
+        pthread_join(tid[i], NULL);
+    }
+  }
+  if(strcmp(argv[1],"*")==0)
+  {
+    char asal[] = "/home/rapuyy/modul3";
+    sortHere(asal);
+  }
+	return 0; 
+} 
