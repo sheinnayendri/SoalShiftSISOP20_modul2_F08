@@ -16,6 +16,7 @@
 #include <pthread.h>
 #include <limits.h>
 
+pthread_t tid[500]; //max 500 thread
 typedef struct arg_struct {
     char asal[1000];
     char cwd[1000];
@@ -36,7 +37,6 @@ void pindahFile(char *argv, char *cwd){
   char string[1000];
   strcpy(string, argv);
   int isFile = is_regular_file(string);
-  
   char dot = '.'; 
   char slash = '/';
   char* tipe = strrchr(string, dot); 
@@ -57,6 +57,7 @@ void pindahFile(char *argv, char *cwd){
   {
     if(!isFile){
       printf("ini adalah folder, salah argumen\n");
+      mkdir(nama, 0777);
       return;
     }
     else
@@ -132,12 +133,17 @@ void sortHere(char *asal){
     {
       if(entry->d_type == DT_REG)
       {
-          char namafile[105];
-          sprintf(namafile, "/home/rapuyy/modul3/%s", entry->d_name);
-          pthread_create(&tid[index], NULL, pindahf, (void *)&args);
-          printf("%s\n", namafile);
-          sleep(1);
-          index++;
+        char namafile[105];
+        sprintf(namafile, "/home/rapuyy/modul3/%s", entry->d_name);
+        strcpy(args.asal, namafile);
+        if(strcmp(namafile, "/home/rapuyy/modul3/no3.c")!=0)
+        {
+            pthread_create(&tid[index], NULL, pindahf, (void *)&args);
+            printf("%s\n", namafile);
+            sleep(1);
+            index++;    
+        }
+        
       }
     }
 }
@@ -147,7 +153,6 @@ int main(int argc, char* argv[])
   // char cwd[1000];
   arg_struct args;
   getcwd(args.cwd, sizeof(args.cwd));
-  pthread_t tid[500]; //max 500 thread
 
   
   if(strcmp(argv[1],"-f")==0)//command -f--------------------------------------------------------------
@@ -170,6 +175,11 @@ int main(int argc, char* argv[])
   {
     char asal[] = "/home/rapuyy/modul3";
     sortHere(asal);
+  }
+  if(strcmp(argv[1],"-d")==0){
+      char asal[1000];
+      strcpy(asal, argv[2]);
+      sortHere(asal);
   }
 	return 0; 
 } 
